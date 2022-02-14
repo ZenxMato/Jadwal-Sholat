@@ -40,7 +40,7 @@ let idLokasi = 15114;
 
 // aktifkan notif reminder untuk waktu-waktu berikut ini
 // jika aktif = true, dinonaktifkan = false
-let aktif = {
+let aktif = true {
   imsak: true,
   subuh: true,
   terbit: false,
