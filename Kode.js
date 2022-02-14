@@ -9,11 +9,11 @@
 // seting telegram
 
 // masukkan token bot yang di dapat dari botfather
-var token = '5244377054:AAG_Jpy3K2aBzyABYXvRKGOT16lx9aTiy8o'
+var token = '5196156438:AAFk1hgbCnEPGJrZ1MevOexR_1QarpWm1bk'
 
 // masukkan ID User/Tujuan Bot akan membroadcast jadwal sholat
 // ID User/Grup/Channel
-var tujuanID = -1001653425944;
+var tujuanID = [-1001591415615 ] ;
 
 // masukkan ID user kamu, untuk mendapatkan notif jika bot terjadi error
 let adminBot = 1207111230;
@@ -24,6 +24,13 @@ var user = new telegram.user();
 
 // sesuaikan zona waktu kalian masing-masing ya.
 let zonaTime = 'GMT+7'
+
+// atur berapa menit pesan reminder akan dihapus
+var menitHapus = 5
+
+// ini tidak usah diubah, dicopas/diketik saja
+var jadwalHapus = user.getValue('jadwalHapus');
+jadwalHapus = jadwalHapus ? JSON.parse(jadwalHapus) : false;
 
 // aktifkan jika ingin mencobanya
 // jangan lupa di set false, sesudah selesai mencoba
@@ -95,6 +102,23 @@ let customPesan = {
 // --- UNTUK PEMULA: cukup diatas itu saja yang diubah ---
 // --- //-// --- // 
 
+function tambahJadwalPenghapusan(chat_id, message_id) {
+  let date = new Date();
+  date.setMinutes(date.getMinutes() + menitHapus)
+
+  let waktu = Utilities.formatDate(date, 'GMT+7', "HH:mm")
+  let data =
+  {
+    waktu: waktu,
+    chat_id: chat_id,
+    message_id: message_id
+  }
+
+  if (!jadwalHapus) return user.setValue('jadwalHapus', JSON.stringify([data]));
+
+  jadwalHapus.push(data);
+  return user.setValue('jadwalHapus', JSON.stringify(jadwalHapus));
+}
 
 // base URL
 let base_url_api = 'https://api.myquran.com/v1'
@@ -147,7 +171,29 @@ function getDBholat() {
     return hasil;
 }
 
-function tampilkanJadwal() {
+function tampilkanJadwal(),if (jadwalHapus) {
+    let indexHapus = []
+    tg.util.forEach(jadwalHapus, (data, index) => {
+      if (data.waktu == waktuSekarang) {
+        try {
+          tg.deleteMessage(data.chat_id, data.message_id)
+        } catch(e) {
+          // tidak perlu dicatch
+        }
+        indexHapus.push(index)
+      }
+    })
+
+    // dibuat terpisah, karena bisa jadi waktunya sama (multi tujuan ID)
+    if (indexHapus.length > 0) {
+      indexHapus.sort().reverse()
+
+      indexHapus.forEach((data) => {
+        jadwalHapus.splice(data, 1)
+      })
+      user.setValue('jadwalHapus', JSON.stringify(jadwalHapus))
+    }
+  } {
     let infoSholat = getDBholat()
     let jadwal = ''
 
@@ -211,7 +257,10 @@ function tampilkanJadwal() {
 
     if (kirim) {
         try {
-            tg.sendMessage(tujuanID, pesan, 'HTML')
+            tujuanID.forEach((id) => {
+            var res = tg.sendMessage(id, pesan, 'HTML')
+            tambahJadwalPenghapusan(res.result.chat.id, res.result.message_id)
+            })
         } catch (e) {
             tg.sendMessage(adminBot, e.message)
         }
