@@ -9,14 +9,14 @@
 // seting telegram
 
 // masukkan token bot yang di dapat dari botfather
-var token = 'TOKENBOT'
+var token = '5244377054:AAG_Jpy3K2aBzyABYXvRKGOT16lx9aTiy8o'
 
 // masukkan ID User/Tujuan Bot akan membroadcast jadwal sholat
 // ID User/Grup/Channel
-var tujuanID = -100123456789;
+var tujuanID = -1001653425944;
 
 // masukkan ID user kamu, untuk mendapatkan notif jika bot terjadi error
-let adminBot = 5647894;
+let adminBot = 1207111230;
 
 // inisiasi bot, biarkan yang ini gak usah diubah
 var tg = new telegram.daftar(token);
@@ -31,12 +31,12 @@ let zonaTime = 'GMT+7'
 let waktuTest = false
 
 // Ganti lokasi ini dengan lokasi kota / kabupaten yang akan dicari
-let lokasi = 'kediri'
+let lokasi = 'Tangerang'
 
 // sesuikan ID lokasi (kota/kabupaten)
 // untuk mendapatkannya, jalankan dulu fungsi cariIDLokasi() 
 // Contoh berikut ini adalah untuk kabupaten Kediri
-let idLokasi = 1609;
+let idLokasi = 15710;
 
 // aktifkan notif reminder untuk waktu-waktu berikut ini
 // jika aktif = true, dinonaktifkan = false
