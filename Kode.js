@@ -171,7 +171,7 @@ function getDBholat() {
     return hasil;
 }
 
-function tampilkanJadwal(),if (jadwalHapus) {
+function tampilkanJadwal() if (jadwalHapus) {
     let indexHapus = []
     tg.util.forEach(jadwalHapus, (data, index) => {
       if (data.waktu == waktuSekarang) {
